@@ -1,0 +1,55 @@
+{
+    "name": "comodojo/extender.project",
+    "description": "Composer project template for comodojo/extender.framework",
+    "license": "GPL-3.0+",
+    "type": "project",
+    "keywords": [
+        "cron",
+        "pseudo-cron",
+        "php",
+        "tasks",
+        "database",
+        "comodojo",
+        "installer",
+        "multiprocess"
+    ],
+    "homepage": "http://extender.comodojo.org",
+     "support": {
+        "issues": "https://github.com/comodojo/extender.project/issues"
+    },
+    "authors": [
+        {
+            "name": "Marco Giovinazzi",
+            "email": "info@comodojo.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Comodojo\\ExtenderInstaller\\": "ExtenderInstaller"
+        }
+    },
+    "scripts": {
+        "post-package-install": [
+            "Comodojo\\ExtenderInstaller\\ExtenderInstallerActions::postPackageInstall"
+        ],
+        "post-package-uninstall": [
+            "Comodojo\\ExtenderInstaller\\ExtenderInstallerActions::postPackageUninstall"
+        ],
+        "post-package-update": [
+            "Comodojo\\ExtenderInstaller\\ExtenderInstallerActions::postPackageUpdate"
+        ]
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.0.0",
+        "comodojo/extender.framework": "dev-master",
+        "comodojo/extender.commandsbundle.default": "dev-master",
+        "pear/console_commandline": "dev-trunk",
+        "pear/pear_exception": "dev-trunk",
+        "pear/console_table": "dev-trunk",
+        "pear/console_color2": "dev-trunk",
+        "comodojo/database": "dev-master",
+        "mtdowling/cron-expression": "1.0.*",
+        "monolog/monolog": "1.10.*"
+    }
+}
