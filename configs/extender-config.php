@@ -64,6 +64,24 @@ define("EXTENDER_MAX_RESULT_BYTES", 2048);
  */
 define("EXTENDER_MAX_CHILDS_RUNTIME", 600);
 
+/**
+ * Parent process niceness (if in multithread mode)
+ *
+ * Values < 0 may require a privileged user!
+ *
+ * @static  integer
+ */
+define("EXTENDER_PARENT_NICENESS", 0);
+
+/**
+ * Child processes niceness (if in multithread mode)
+ *
+ * Values < 0 may require a privileged user!
+ *
+ * @static  integer
+ */
+define("EXTENDER_CHILDS_NICENESS", 0);
+
 ######## END EXTENDER INTERNAL PROPERTIES ########
 
 

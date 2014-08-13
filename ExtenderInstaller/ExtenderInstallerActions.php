@@ -1,14 +1,15 @@
 <?php namespace Comodojo\ExtenderInstaller;
 
 /**
- * Dispatcher installer - a simple class (static methods) to manage plugin installations
+ * Extender installer - a simple class (static methods) to manage plugin/bundles installations
  *
  * It currently supports:
- * - dispatcher-plugin - generic plugins such as tracer, database, ...
- * - dispatcher-service-bundle - service bundles
+ * - extender-plugin - generic plugins
+ * - extender-tasks-bundle - tasks bundles
+ * - extender-commands-bundle - commands bundles
  * 
- * @package     Comodojo dispatcher
- * @author      comodojo <info@comodojo.org>
+ * @package     Comodojo extender
+ * @author      Marco Giovinazzi <info@comodojo.org>
  * @license     GPL-3.0+
  *
  * LICENSE:
@@ -40,7 +41,7 @@ class ExtenderInstallerActions {
 
     private static $tasks_cfg = 'configs/tasks-config.php';
 
-    private static $known_types = array('extender-plugin', 'extender-tasks-bundle', 'extender-commands-bundle')
+    private static $known_types = array('extender-plugin', 'extender-tasks-bundle', 'extender-commands-bundle');
 
     private static $reserved_folders = Array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
 
@@ -150,9 +151,9 @@ class ExtenderInstallerActions {
 
             if ( $type == "extender-plugin" ) self::loadPlugin($name, $plugins_actions);
 
-            if ( $type == "extender-tasks-bundle" ) self::loadTasks($name, $commands_actions);
+            if ( $type == "extender-tasks-bundle" ) self::loadTasks($name, $tasks_actions);
 
-            if ( $type == "extender-commands-bundle" ) self::loadCommands($name, $tasks_actions);
+            if ( $type == "extender-commands-bundle" ) self::loadCommands($name, $commands_actions);
 
             self::create_folders($folders_actions);
 
@@ -382,11 +383,16 @@ class ExtenderInstallerActions {
 
                 }
 
-                $parameters = array($description, $aliases, $options, $arguments);
+                $parameters = array(
+                    "description" => $description, 
+                    "aliases"     => $aliases,
+                    "options"     => $options,
+                    "arguments"   => $arguments
+                );
                 
                 echo "+ Enabling command ".$command." (".$package_name.")\n";
 
-                $line_load .= '$extender->addCommand(' . var_export($parameters, true) . ');'."\n";
+                $line_load .= '$extender->addCommand("' . $command . '", ' . var_export($parameters, true) . ');'."\n";
 
             }
 

@@ -76,7 +76,18 @@ require 'configs/tasks-config.php';
  | Extend!
  |--------------------------------
  |
- | Run jobs/tasks
+ | If in daemon mode, start while
+ | loop
  |
  */
-$extender->extend();
+if ( $extender->getDaemonMode() ) {
+
+	while (true) {
+		
+		$extender->extend();
+
+		sleep(1);
+
+	}
+
+} else $extender->extend();
