@@ -348,83 +348,91 @@ class ExtenderInstallerActions {
 
     private static function loadCommands($package_name, $package_loader) {
 
-        // $line_mark = "/****** SERVICE - ".$package_name." - SERVICE ******/";
+        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
 
-        // $line_load = "";
+        $line_load = "";
 
-        // list($author,$name) = explode("/", $package_name);
+        if ( is_array($package_loader) ) {
 
-        // $service_path = self::$vendor.$author."/".$name."/services/";
+            foreach ($package_loader as $command => $actions) {
 
-        // if ( is_array($package_loader) ) {
+                $description = isset($actions["description"]) ? $actions["description"] : "";
 
-        //     foreach ($package_loader as $pload) {
+                $aliases = array();
 
-        //         if ( !array_key_exists("service",$pload) OR !array_key_exists("type",$pload) OR !array_key_exists("target",$pload) ) throw new Exception("Wrong service route");
+                if ( isset($actions["aliases"]) AND @is_array($actions["aliases"]) ) {
 
-        //         $service = $pload["service"];
-        //         $type = $pload["type"];
+                    foreach ($actions["aliases"] as $alias) array_push($aliases, $alias);
+
+                }
+
+                $options = array();
+
+                if ( isset($actions["options"]) AND @is_array($actions["options"]) ) {
+
+                    foreach ($actions["options"] as $option => $oparameters) $options[$option] = $oparameters;
+
+                }
+
+                $arguments = array();
+
+                if ( isset($actions["arguments"]) AND @is_array($actions["arguments"]) ) {
+
+                    foreach ($actions["arguments"] as $argument => $aparameters) $arguments[$argument] = $aparameters;
+
+                }
+
+                $parameters = array($description, $aliases, $options, $arguments);
                 
-        //         if ( array_key_exists("relative",$pload) ) $relative = filter_var($pload["relative"], FILTER_VALIDATE_BOOLEAN);
-        //         else $relative = false;
+                echo "+ Enabling command ".$command." (".$package_name.")\n";
 
-        //         if ( $relative ) $target = $pload["target"];
-        //         else $target = $service_path.$pload["target"];
+                $line_load .= '$extender->addCommand(' . var_export($parameters, true) . ');'."\n";
 
-        //         echo "+ Enabling ".($relative ? "relative" : "absolute")." route for service ".$service."(".$package_name.")\n";
+            }
 
-        //         if ( isset($pload["parameters"]) AND @is_array($pload["parameters"]) ) {
-        //             $line_load .= '$dispatcher->setRoute("'.$service.'", "'.$type.'", "'.$target.'", ' . var_export($pload["parameters"], true) . ', '.($relative ? 'true' : 'false').');'."\n";
-        //         }
-        //         else {
-        //             $line_load .= '$dispatcher->setRoute("'.$service.'", "'.$type.'", "'.$target.'", Array(), '.($relative ? 'true' : 'false').');'."\n";
-        //         }
-
-        //     }
-
-        // }
-        // else throw new Exception("Wrong service loader");
+        }
+        else throw new Exception("Wrong service loader");
         
-        // $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
+        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
 
-        // $action = file_put_contents(self::$routing_cfg, $to_append, FILE_APPEND | LOCK_EX);
+        $action = file_put_contents(self::$commands_cfg, $to_append, FILE_APPEND | LOCK_EX);
 
-        // if ( $action === false ) throw new Exception("Cannot activate service route");
+        if ( $action === false ) throw new Exception("Cannot activate commands bundle");
 
     }
 
     private static function unloadCommands($package_name) {
 
-        // echo "- Disabling route for services of ".$package_name."\n";
+        echo "- Disabling commands of ".$package_name."\n";
 
-        // $line_mark = "/****** SERVICE - ".$package_name." - SERVICE ******/";
+        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
 
-        // $cfg = file(self::$routing_cfg, FILE_IGNORE_NEW_LINES);
+        $cfg = file(self::$commands_cfg, FILE_IGNORE_NEW_LINES);
 
-        // $found = false;
+        $found = false;
 
-        // foreach ($cfg as $position => $line) {
+        foreach ($cfg as $position => $line) {
             
-        //     if ( stristr($line, $line_mark) ) {
+            if ( stristr($line, $line_mark) ) {
 
-        //         unset($cfg[$position]);
+                unset($cfg[$position]);
 
-        //         $found = !$found;
+                $found = !$found;
 
-        //     }
+            }
 
-        //     else {
+            else {
 
-        //         if ( $found ) unset($cfg[$position]);
-        //         else continue;
+                if ( $found ) unset($cfg[$position]);
+                else continue;
 
-        //     }
+            }
 
-        // }
+        }
 
-        // $action = file_put_contents(self::$routing_cfg, implode("\n", array_values($cfg)), LOCK_EX);
+        $action = file_put_contents(self::$commands_cfg, implode("\n", array_values($cfg)), LOCK_EX);
 
-        // if ( $action === false ) throw new Exception("Cannot deactivate route");
+        if ( $action === false ) throw new Exception("Cannot deactivate commands bundle");
 
     }
 

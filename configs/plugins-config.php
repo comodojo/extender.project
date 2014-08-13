@@ -1,17 +1,17 @@
 <?php
 
 /**
- * This is the extender tasks loader.
+ * This is the plugin configuration file
  *
- * It should contain tasks declarations, like:
+ * It should contain method invocations like:
  *
- *  $extender->addTask("foo", "FooTask.php", "Foo task");
+ *  $extender->loadPlugin("[PLUGIN_NAME]", (optional)"[PLUGIN_FOLDER]");
  *
  * WARNING: DO NOT close PHP tag in this file!
  *
  * @package     Comodojo extender
- * @author      Marco Giovinazzi <info@comodojo.org>
- * @license     GPL-3.0+
+ * @author		Marco Giovinazzi <info@comodojo.org>
+ * @license		GPL-3.0+
  *
  * LICENSE:
  * 
