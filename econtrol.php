@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use \Comodojo\Extender\ExtenderCommandlineController;
+use \Comodojo\Extender\Econtrol;
 
 /**
  * Comodojo extender
@@ -61,7 +61,7 @@ require 'vendor/autoload.php';
  | controller
  |
  */
-$extender = new ExtenderCommandlineController();
+$extender = new Econtrol();
 
 /*
  |--------------------------------

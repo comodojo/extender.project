@@ -71,7 +71,7 @@ define("EXTENDER_MAX_CHILDS_RUNTIME", 600);
  *
  * @static  integer
  */
-define("EXTENDER_PARENT_NICENESS", 0);
+// define("EXTENDER_PARENT_NICENESS", 0);
 
 /**
  * Child processes niceness (if in multithread mode)
@@ -80,7 +80,7 @@ define("EXTENDER_PARENT_NICENESS", 0);
  *
  * @static  integer
  */
-define("EXTENDER_CHILDS_NICENESS", 0);
+// define("EXTENDER_CHILD_NICENESS", 0);
 
 ######## END EXTENDER INTERNAL PROPERTIES ########
 
@@ -159,6 +159,13 @@ define("EXTENDER_PLUGIN_FOLDER", EXTENDER_REAL_PATH."plugins/");
  * @static  string
  */
 define("EXTENDER_COMMAND_FOLDER", EXTENDER_REAL_PATH."commands/");
+
+/**
+ * Cache folder
+ * 
+ * @static  string
+ */
+define("EXTENDER_CACHE_FOLDER", EXTENDER_REAL_PATH."cache/");
 
 ######### END DISPATCHER FOLDERS #########
 

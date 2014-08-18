@@ -5,8 +5,6 @@
     "type": "project",
     "keywords": [
         "cron",
-        "pseudo-cron",
-        "php",
         "tasks",
         "database",
         "comodojo",
@@ -41,7 +39,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.0.0",
+        "php": ">=5.3.0",
         "comodojo/extender.framework": "dev-master",
         "comodojo/extender.commandsbundle.default": "dev-master"
     }
