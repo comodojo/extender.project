@@ -1,0 +1,84 @@
+#! /bin/sh
+ 
+NAME=extender
+DESC="Comodojo Extender"
+
+PIDFILE="/var/run/${NAME}.pid"
+
+LOGFILE="/var/log/${NAME}.log"
+
+USER="USER TO RUN EXTENDER AS"
+
+DAEMON="/usr/bin/php"
+
+DAEMON_OPTS="/PATH/TO/EXTENDER.PROJECT/extender.php -- -d"
+ 
+START_OPTS="--start --chuid $USER --background --make-pidfile --pidfile ${PIDFILE} --exec ${DAEMON} ${DAEMON_OPTS}"
+
+STOP_OPTS="--stop --pidfile ${PIDFILE}"
+ 
+test -x $DAEMON || exit 0
+ 
+set -e
+
+get_pid() {
+	cat "$PIDFILE"
+}
+
+is_running() {
+	[ -f "$PIDFILE" ] && ps `get_pid` > /dev/null 2>&1
+}
+ 
+case "$1" in
+
+	start)
+		if is_running; then
+			echo "${DESC} running"
+		else
+			echo -n "Starting ${DESC}... "
+			start-stop-daemon $START_OPTS >> $LOGFILE
+			echo "OK"
+		fi
+	;;
+	
+	stop)
+		if is_running; then
+			echo -n "Stopping $DESC... "
+			start-stop-daemon $STOP_OPTS
+			echo "OK"
+			rm -f $PIDFILE
+		else
+			echo "${DESC} not running"
+		fi
+	;;
+
+	restart|force-reload)
+		if is_running; then
+			echo -n "Restarting $DESC... "
+			start-stop-daemon $STOP_OPTS
+			sleep 1
+			start-stop-daemon $START_OPTS >> $LOGFILE
+			echo "OK"
+		else
+			echo "${DESC} not running"
+		fi
+	;;
+
+	status)
+		if is_running; then
+			echo "${DESC} running"
+		else
+			echo "${DESC} stopped"
+			exit 1
+		fi
+	;;
+
+	*)
+		N=/etc/init.d/$NAME
+		echo "Usage: $N {start|stop|status|restart|force-reload}" >&2
+		exit 1
+	;;
+
+esac
+ 
+exit 0
