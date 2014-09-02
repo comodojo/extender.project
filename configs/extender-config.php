@@ -27,6 +27,7 @@
 
 /**
  * Local timezone, to not rely on the system's timezone settings
+ * (optional if correctly configured in php.ini)
  *
  * It is STRONGLY reccomended to set this parameter properly
  *
@@ -104,7 +105,7 @@ define("EXTENDER_LOG_NAME", "extender");
 /**
  * Log target
  *
- * - if NULL, logger will log to standard output (use as an alternative of --verbose option)
+ * - if NULL, logger will log to standard output (alternative to -v option)
  * - if string, it will be the filename to log to
  *
  * PLEASE NOTE: verify filesystem permissions on log folder BEFORE enabling file logging
