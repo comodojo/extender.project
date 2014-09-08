@@ -88,7 +88,7 @@ if ( $extender->getDaemonMode() ) {
 		
 		$extender->extend();
 
-		sleep(1);
+		sleep(EXTENDER_IDLE_TIME);
 
 	}
 

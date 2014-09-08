@@ -51,6 +51,15 @@ define("EXTENDER_REAL_PATH", realpath(dirname(__FILE__))."/../");
 define("EXTENDER_MULTITHREAD_ENABLED", true);
 
 /**
+ * Idle time, in seconds
+ *
+ * This constant determine how long extender should be idle between each extend() cycle
+ *
+ * @static  integer
+ */
+define("EXTENDER_IDLE_TIME", 1);
+
+/**
  * Max bytes extender should read from completed child processes, if
  * multithread is enabled
  *
