@@ -40,7 +40,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.0",
-        "comodojo/extender.framework": "dev-master",
-        "comodojo/extender.commandsbundle.default": "dev-master"
+        "comodojo/extender.framework": "1.0.*",
+        "comodojo/extender.commandsbundle.default": "1.0.*"
     }
 }
