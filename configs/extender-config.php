@@ -68,6 +68,13 @@ define("EXTENDER_IDLE_TIME", 1);
 define("EXTENDER_MAX_RESULT_BYTES", 2048);
 
 /**
+ * Max child process to fork, 0 to no limit
+ *
+ * @static  integer
+ */
+define("EXTENDER_MAX_CHILDS", 0);
+
+/**
  * Child process max runtime, in seconds (default 10min)
  *
  * @static  integer

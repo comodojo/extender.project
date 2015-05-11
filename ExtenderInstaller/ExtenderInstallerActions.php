@@ -29,6 +29,7 @@
  */
 
 use Composer\Script\Event;
+use Composer\Installer\PackageEvent;
 use \Exception;
 
 class ExtenderInstallerActions {
@@ -47,7 +48,7 @@ class ExtenderInstallerActions {
 
     private static $mask = 0644;
 
-    public static function postPackageInstall(Event $event) {
+    public static function postPackageInstall(PackageEvent $event) {
 
         $type = $event->getOperation()->getPackage()->getType();
 
@@ -73,7 +74,7 @@ class ExtenderInstallerActions {
 
     }
 
-    public static function postPackageUninstall(Event $event) {
+    public static function postPackageUninstall(PackageEvent $event) {
 
         $type = $event->getOperation()->getPackage()->getType();
 
@@ -99,7 +100,7 @@ class ExtenderInstallerActions {
 
     }
 
-    public static function postPackageUpdate(Event $event) {
+    public static function postPackageUpdate(PackageEvent $event) {
 
         $initial_package = $event->getOperation()->getInitialPackage();
 
