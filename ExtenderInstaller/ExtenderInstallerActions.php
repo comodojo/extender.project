@@ -9,7 +9,7 @@
  * - extender-commands-bundle - commands bundles
  * 
  * @package     Comodojo extender
- * @author      Marco Giovinazzi <info@comodojo.org>
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     GPL-3.0+
  *
  * LICENSE:
@@ -28,8 +28,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Composer\Script\Event;
-use Composer\Installer\PackageEvent;
+use \Composer\Script\Event;
+use \Composer\Installer\PackageEvent;
 use \Exception;
 
 class ExtenderInstallerActions {
@@ -192,28 +192,44 @@ class ExtenderInstallerActions {
 
         $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
 
-        list($author,$name) = explode("/", $package_name);
-
-        $plugin_path = self::$vendor.$author."/".$name."/src/";
-
         if ( is_array($package_loader) ) {
 
             $line_load = "";
 
             foreach ($package_loader as $loader) {
 
-                echo "+ Enabling plugin ".$loader."\n";
+                if ( !isset($loader['method']) OR empty($loader["method"]) ) {
 
-                $line_load .= '$extender->loadPlugin("'.$loader.'", "'.$plugin_path.'");'."\n";
+                    echo "+ Enabling plugin ".$loader["class"]." on event ".$loader["event"]."\n";
+
+                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'");'."\n";
+
+                } else {
+
+                    echo "+ Enabling plugin ".$loader["class"]."::".$loader["method"]." on event ".$loader["event"]."\n";
+
+                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'", "'.$loader["method"].'");'."\n";
+
+                }
 
             }
 
         }
         else {
 
-            echo "+ Enabling plugin ".$package_loader."\n";
+            if ( !isset($package_loader['method']) OR empty($package_loader["method"]) ) {
 
-            $line_load = '$extender->loadPlugin("'.$package_loader.'", "'.$plugin_path.'");'."\n";
+                echo "+ Enabling plugin ".$package_loader["class"]." on event ".$package_loader["event"]."\n";
+
+                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'");'."\n";
+
+            } else {
+
+                echo "+ Enabling plugin ".$package_loader["class"]."::".$package_loader["method"]." on event ".$package_loader["event"]."\n";
+
+                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'", "'.$package_loader["method"].'");'."\n";
+
+            }
 
         }
         
@@ -264,10 +280,6 @@ class ExtenderInstallerActions {
 
         $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
 
-        list($author,$name) = explode("/", $package_name);
-
-        $tasks_path = self::$vendor.$author."/".$name."/tasks/";
-
         if ( is_array($package_loader) ) {
 
             $line_load = "";
@@ -276,15 +288,13 @@ class ExtenderInstallerActions {
 
                 $name = $loader['name'];
 
-                $target = $tasks_path.$loader['target'];
+                $class = $loader['class'];
 
                 $description = isset($loader['description']) ? $loader['description'] : null;
 
-                $class = isset($loader['class']) ? '"'.$loader['class'].'"' : 'null';
-
                 echo "+ Enabling task ".$name."\n";
 
-                $line_load .= '$extender->addTask("'.$name.'", "'.$target.'", "'.$description.'", '.$class.', false);'."\n";
+                $line_load .= '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
 
             }
 
@@ -293,15 +303,13 @@ class ExtenderInstallerActions {
 
             $name = $package_loader['name'];
 
-            $target = $tasks_path.$package_loader['target'];
+            $class = $package_loader['class'];
 
             $description = isset($package_loader['description']) ? $package_loader['description'] : null;
 
-            $class = isset($package_loader['class']) ? '"'.$package_loader['class'].'"' : 'null';
-
             echo "+ Enabling task ".$name."\n";
 
-            $line_load = '$extender->addTask("'.$name.'", "'.$target.'", "'.$description.'", '.$class.', false);'."\n";
+            $line_load = '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
 
         }
         

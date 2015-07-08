@@ -11,8 +11,8 @@ use \Comodojo\Extender\Econtrol;
  * This is the commandline control center
  * 
  * @package     Comodojo extender
- * @author		Marco Giovinazzi <info@comodojo.org>
- * @license		GPL-3.0+
+ * @author      Marco Giovinazzi <info@comodojo.org>
+ * @license     GPL-3.0+
  *
  * LICENSE:
  * 

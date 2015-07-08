@@ -12,8 +12,8 @@ use Comodojo\Extender\Extender;
  * This is the frontend (real extender)
  * 
  * @package     Comodojo extender
- * @author		Marco Giovinazzi <info@comodojo.org>
- * @license		GPL-3.0+
+ * @author      Marco Giovinazzi <info@comodojo.org>
+ * @license     GPL-3.0+
  *
  * LICENSE:
  * 
@@ -75,6 +75,16 @@ require 'configs/tasks-config.php';
 
 /*
  |--------------------------------
+ | Load plugins
+ |--------------------------------
+ |
+ | Load declared plugins (hooks)
+ |
+ */
+require 'configs/plugins-config.php';
+
+/*
+ |--------------------------------
  | Extend!
  |--------------------------------
  |
@@ -84,12 +94,12 @@ require 'configs/tasks-config.php';
  */
 if ( $extender->getDaemonMode() ) {
 
-	while (true) {
-		
-		$extender->extend();
+    while (true) {
+        
+        $extender->extend();
 
-		sleep(EXTENDER_IDLE_TIME);
+        sleep(EXTENDER_IDLE_TIME);
 
-	}
+    }
 
 } else $extender->extend();
