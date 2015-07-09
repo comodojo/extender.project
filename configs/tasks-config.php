@@ -5,7 +5,7 @@
  *
  * It should contain tasks declarations, like:
  *
- *  $extender->addTask("foo", "FooTask.php", "Foo task");
+ *  $extender->addTask("HelloWord", "\My\Tasks\HelloWorldTask", "Greetings from extender");
  *
  * WARNING: DO NOT close PHP tag in this file!
  *

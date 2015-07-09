@@ -5,7 +5,7 @@
  *
  * It should contain method invocations like:
  *
- *  $extender->loadPlugin("[PLUGIN_NAME]", (optional)"[PLUGIN_FOLDER]");
+ *  nder->addHook("extender", "\My\Plugins\TestPlugin", "OnExtenderReady");
  *
  * WARNING: DO NOT close PHP tag in this file!
  *

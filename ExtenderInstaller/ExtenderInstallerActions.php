@@ -42,7 +42,7 @@ class ExtenderInstallerActions {
 
     private static $tasks_cfg = 'configs/tasks-config.php';
 
-    private static $known_types = array('extender-plugin', 'extender-tasks-bundle', 'extender-commands-bundle');
+    private static $known_types = array('extender-plugins-bundle', 'extender-tasks-bundle', 'extender-commands-bundle');
 
     private static $reserved_folders = Array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
 
@@ -150,7 +150,7 @@ class ExtenderInstallerActions {
 
         try {
 
-            if ( $type == "extender-plugin" ) self::loadPlugin($name, $plugins_actions);
+            if ( $type == "extender-plugins-bundle" ) self::loadPlugin($name, $plugins_actions);
 
             if ( $type == "extender-tasks-bundle" ) self::loadTasks($name, $tasks_actions);
 
@@ -172,7 +172,7 @@ class ExtenderInstallerActions {
 
         try {
             
-            if ( $type == "extender-plugin" ) self::unloadPlugin($name);
+            if ( $type == "extender-plugins-bundle" ) self::unloadPlugin($name);
 
             if ( $type == "extender-tasks-bundle" ) self::unloadTasks($name);
 
