@@ -12,7 +12,7 @@ use Comodojo\Extender\Extender;
  * This is the frontend (real extender)
  * 
  * @package     Comodojo extender
- * @author      Marco Giovinazzi <info@comodojo.org>
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     GPL-3.0+
  *
  * LICENSE:
