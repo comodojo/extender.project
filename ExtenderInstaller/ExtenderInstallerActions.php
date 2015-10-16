@@ -29,6 +29,8 @@
  */
 
 use \Comodojo\ExtenderInstaller\AbstractInstaller;
+use \Comodojo\ExtenderInstaller\ExtenderInstaller;
+use \Comodojo\ExtenderInstaller\FileInstaller;
 use \Composer\Script\Event;
 use \Composer\Installer\PackageEvent;
 use \Exception;

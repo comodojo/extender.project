@@ -79,7 +79,7 @@ class ExtenderInstaller extends AbstractInstaller {
         
         $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
 
-        $action = file_put_contents(self::$plugins_cfg, $to_append, FILE_APPEND | LOCK_EX);
+        $action = file_put_contents(self::$extender_plugins_cfg, $to_append, FILE_APPEND | LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot activate plugin");
 
@@ -91,7 +91,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
 
-        $cfg = file(self::$plugins_cfg, FILE_IGNORE_NEW_LINES);
+        $cfg = file(self::$extender_plugins_cfg, FILE_IGNORE_NEW_LINES);
 
         $found = false;
 
@@ -114,7 +114,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         }
 
-        $action = file_put_contents(self::$plugins_cfg, implode("\n", array_values($cfg)), LOCK_EX);
+        $action = file_put_contents(self::$extender_plugins_cfg, implode("\n", array_values($cfg)), LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot deactivate plugin");
 
@@ -159,7 +159,7 @@ class ExtenderInstaller extends AbstractInstaller {
         
         $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
 
-        $action = file_put_contents(self::$tasks_cfg, $to_append, FILE_APPEND | LOCK_EX);
+        $action = file_put_contents(self::$extender_tasks_cfg, $to_append, FILE_APPEND | LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot activate tasks");
 
@@ -171,7 +171,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
 
-        $cfg = file(self::$tasks_cfg, FILE_IGNORE_NEW_LINES);
+        $cfg = file(self::$extender_tasks_cfg, FILE_IGNORE_NEW_LINES);
 
         $found = false;
 
@@ -194,7 +194,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         }
 
-        $action = file_put_contents(self::$tasks_cfg, implode("\n", array_values($cfg)), LOCK_EX);
+        $action = file_put_contents(self::$extender_tasks_cfg, implode("\n", array_values($cfg)), LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot deactivate tasks");
 
@@ -254,7 +254,7 @@ class ExtenderInstaller extends AbstractInstaller {
         
         $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
 
-        $action = file_put_contents(self::$commands_cfg, $to_append, FILE_APPEND | LOCK_EX);
+        $action = file_put_contents(self::$extender_commands_cfg, $to_append, FILE_APPEND | LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot activate commands bundle");
 
@@ -266,7 +266,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
 
-        $cfg = file(self::$commands_cfg, FILE_IGNORE_NEW_LINES);
+        $cfg = file(self::$extender_commands_cfg, FILE_IGNORE_NEW_LINES);
 
         $found = false;
 
@@ -289,7 +289,7 @@ class ExtenderInstaller extends AbstractInstaller {
 
         }
 
-        $action = file_put_contents(self::$commands_cfg, implode("\n", array_values($cfg)), LOCK_EX);
+        $action = file_put_contents(self::$extender_commands_cfg, implode("\n", array_values($cfg)), LOCK_EX);
 
         if ( $action === false ) throw new Exception("Cannot deactivate commands bundle");
 

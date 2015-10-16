@@ -71,7 +71,7 @@ $extender = new Extender();
  | Load installed/declared tasks
  |
  */
-require 'configs/tasks-config.php';
+require 'configs/extender-tasks-config.php';
 
 /*
  |--------------------------------
@@ -81,7 +81,7 @@ require 'configs/tasks-config.php';
  | Load declared plugins (hooks)
  |
  */
-require 'configs/plugins-config.php';
+require 'configs/extender-plugins-config.php';
 
 /*
  |--------------------------------

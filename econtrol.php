@@ -71,7 +71,7 @@ $extender = new Econtrol();
  | Load installed/declared tasks
  |
  */
-require 'configs/tasks-config.php';
+require 'configs/extender-tasks-config.php';
 
 /*
  |--------------------------------
@@ -81,7 +81,7 @@ require 'configs/tasks-config.php';
  | Load installed/declared commands
  |
  */
-require 'configs/commands-config.php';
+require 'configs/extender-commands-config.php';
 
 /*
  |--------------------------------

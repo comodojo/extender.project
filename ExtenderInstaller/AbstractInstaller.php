@@ -30,17 +30,17 @@
 
 abstract class AbstractInstaller {
 
-	protected static $known_types = array('extender-plugins-bundle', 'extender-tasks-bundle', 'extender-commands-bundle');
+	protected static $known_types = array('extender-plugins-bundle', 'extender-tasks-bundle', 'extender-commands-bundle', 'comodojo-bundle');
 
     protected static $reserved_folders = Array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
 
     protected static $vendor = 'vendor/';
 
-    protected static $plugins_cfg = 'configs/plugins-config.php';
+    protected static $extender_plugins_cfg = 'configs/extender-plugins-config.php';
 
-    protected static $commands_cfg = 'configs/commands-config.php';
+    protected static $extender_commands_cfg = 'configs/extender-commands-config.php';
 
-    protected static $tasks_cfg = 'configs/tasks-config.php';
+    protected static $extender_tasks_cfg = 'configs/extender-tasks-config.php';
 
     protected static $mask = 0644;
 
