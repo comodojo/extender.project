@@ -28,25 +28,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use \Comodojo\ExtenderInstaller\AbstractInstaller;
 use \Composer\Script\Event;
 use \Composer\Installer\PackageEvent;
 use \Exception;
 
-class ExtenderInstallerActions {
-
-    private static $vendor = 'vendor/';
-
-    private static $plugins_cfg = 'configs/plugins-config.php';
-
-    private static $commands_cfg = 'configs/commands-config.php';
-
-    private static $tasks_cfg = 'configs/tasks-config.php';
-
-    private static $known_types = array('extender-plugins-bundle', 'extender-tasks-bundle', 'extender-commands-bundle');
-
-    private static $reserved_folders = Array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
-
-    private static $mask = 0644;
+class ExtenderInstallerActions extends AbstractInstaller {
 
     public static function postPackageInstall(PackageEvent $event) {
 
@@ -150,13 +137,13 @@ class ExtenderInstallerActions {
 
         try {
 
-            if ( $type == "extender-plugins-bundle" ) self::loadPlugin($name, $plugins_actions);
+            if ( $type == "extender-plugins-bundle" ) ExtenderInstaller::loadPlugin($name, $plugins_actions);
 
-            if ( $type == "extender-tasks-bundle" ) self::loadTasks($name, $tasks_actions);
+            if ( $type == "extender-tasks-bundle" ) ExtenderInstaller::loadTasks($name, $tasks_actions);
 
-            if ( $type == "extender-commands-bundle" ) self::loadCommands($name, $commands_actions);
+            if ( $type == "extender-commands-bundle" ) ExtenderInstaller::loadCommands($name, $commands_actions);
 
-            self::create_folders($folders_actions);
+            FileInstaller::create_folders($folders_actions);
 
         } catch (Exception $e) {
             
@@ -172,13 +159,13 @@ class ExtenderInstallerActions {
 
         try {
             
-            if ( $type == "extender-plugins-bundle" ) self::unloadPlugin($name);
+            if ( $type == "extender-plugins-bundle" ) ExtenderInstaller::unloadPlugin($name);
 
-            if ( $type == "extender-tasks-bundle" ) self::unloadTasks($name);
+            if ( $type == "extender-tasks-bundle" ) ExtenderInstaller::unloadTasks($name);
 
-            if ( $type == "extender-commands-bundle" ) self::unloadCommands($name);
+            if ( $type == "extender-commands-bundle" ) ExtenderInstaller::unloadCommands($name);
 
-            self::delete_folders($folders_actions);
+            FileInstaller::delete_folders($folders_actions);
 
         } catch (Exception $e) {
             
@@ -188,390 +175,9 @@ class ExtenderInstallerActions {
 
     }
 
-    private static function loadPlugin($package_name, $package_loader) {
-
-        $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
-
-        if ( is_array($package_loader) ) {
-
-            $line_load = "";
-
-            foreach ($package_loader as $loader) {
-
-                if ( !isset($loader['method']) OR empty($loader["method"]) ) {
-
-                    echo "+ Enabling plugin ".$loader["class"]." on event ".$loader["event"]."\n";
-
-                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'");'."\n";
-
-                } else {
-
-                    echo "+ Enabling plugin ".$loader["class"]."::".$loader["method"]." on event ".$loader["event"]."\n";
-
-                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'", "'.$loader["method"].'");'."\n";
-
-                }
-
-            }
-
-        }
-        else {
-
-            if ( !isset($package_loader['method']) OR empty($package_loader["method"]) ) {
-
-                echo "+ Enabling plugin ".$package_loader["class"]." on event ".$package_loader["event"]."\n";
-
-                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'");'."\n";
-
-            } else {
-
-                echo "+ Enabling plugin ".$package_loader["class"]."::".$package_loader["method"]." on event ".$package_loader["event"]."\n";
-
-                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'", "'.$package_loader["method"].'");'."\n";
-
-            }
-
-        }
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
-
-        $action = file_put_contents(self::$plugins_cfg, $to_append, FILE_APPEND | LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot activate plugin");
-
-    }
-
-    private static function unloadPlugin($package_name) {
-
-        echo "- Disabling plugin ".$package_name."\n";
-
-        $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
-
-        $cfg = file(self::$plugins_cfg, FILE_IGNORE_NEW_LINES);
-
-        $found = false;
-
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
-
-                unset($cfg[$position]);
-
-                $found = !$found;
-
-            }
-
-            else {
-
-                if ( $found ) unset($cfg[$position]);
-                else continue;
-
-            }
-
-        }
-
-        $action = file_put_contents(self::$plugins_cfg, implode("\n", array_values($cfg)), LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot deactivate plugin");
-
-    }
-
-    private static function loadTasks($package_name, $package_loader) {
-
-        $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
-
-        if ( is_array($package_loader) ) {
-
-            $line_load = "";
-
-            foreach ($package_loader as $loader) {
-
-                $name = $loader['name'];
-
-                $class = $loader['class'];
-
-                $description = isset($loader['description']) ? $loader['description'] : null;
-
-                echo "+ Enabling task ".$name."\n";
-
-                $line_load .= '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
-
-            }
-
-        }
-        else {
-
-            $name = $package_loader['name'];
-
-            $class = $package_loader['class'];
-
-            $description = isset($package_loader['description']) ? $package_loader['description'] : null;
-
-            echo "+ Enabling task ".$name."\n";
-
-            $line_load = '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
-
-        }
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
-
-        $action = file_put_contents(self::$tasks_cfg, $to_append, FILE_APPEND | LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot activate tasks");
-
-    }
-
-    private static function unloadTasks($package_name) {
-
-        echo "- Disabling tasks of ".$package_name."\n";
-
-        $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
-
-        $cfg = file(self::$tasks_cfg, FILE_IGNORE_NEW_LINES);
-
-        $found = false;
-
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
-
-                unset($cfg[$position]);
-
-                $found = !$found;
-
-            }
-
-            else {
-
-                if ( $found ) unset($cfg[$position]);
-                else continue;
-
-            }
-
-        }
-
-        $action = file_put_contents(self::$tasks_cfg, implode("\n", array_values($cfg)), LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot deactivate tasks");
-
-    }
-
-    private static function loadCommands($package_name, $package_loader) {
-
-        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
-
-        $line_load = "";
-
-        if ( is_array($package_loader) ) {
-
-            foreach ($package_loader as $command => $actions) {
-
-                $description = isset($actions["description"]) ? $actions["description"] : "";
-
-                $aliases = array();
-
-                if ( isset($actions["aliases"]) AND @is_array($actions["aliases"]) ) {
-
-                    foreach ($actions["aliases"] as $alias) array_push($aliases, $alias);
-
-                }
-
-                $options = array();
-
-                if ( isset($actions["options"]) AND @is_array($actions["options"]) ) {
-
-                    foreach ($actions["options"] as $option => $oparameters) $options[$option] = $oparameters;
-
-                }
-
-                $arguments = array();
-
-                if ( isset($actions["arguments"]) AND @is_array($actions["arguments"]) ) {
-
-                    foreach ($actions["arguments"] as $argument => $aparameters) $arguments[$argument] = $aparameters;
-
-                }
-
-                $parameters = array(
-                    "description" => $description, 
-                    "aliases"     => $aliases,
-                    "options"     => $options,
-                    "arguments"   => $arguments
-                );
-                
-                echo "+ Enabling command ".$command." (".$package_name.")\n";
-
-                $line_load .= '$extender->addCommand("' . $command . '", ' . var_export($parameters, true) . ');'."\n";
-
-            }
-
-        }
-        else throw new Exception("Wrong service loader");
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
-
-        $action = file_put_contents(self::$commands_cfg, $to_append, FILE_APPEND | LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot activate commands bundle");
-
-    }
-
-    private static function unloadCommands($package_name) {
-
-        echo "- Disabling commands of ".$package_name."\n";
-
-        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
-
-        $cfg = file(self::$commands_cfg, FILE_IGNORE_NEW_LINES);
-
-        $found = false;
-
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
-
-                unset($cfg[$position]);
-
-                $found = !$found;
-
-            }
-
-            else {
-
-                if ( $found ) unset($cfg[$position]);
-                else continue;
-
-            }
-
-        }
-
-        $action = file_put_contents(self::$commands_cfg, implode("\n", array_values($cfg)), LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot deactivate commands bundle");
-
-    }
-
-    private static function create_folders($folders) {
-
-        if ( is_array($folders) ) {
-
-            foreach ($folders as $folder) {
-                
-                if ( in_array($folder, self::$reserved_folders) ) throw new Exception("Cannot overwrite reserved folder!");
-
-                echo "+ Creating folder ".$folder."\n";
-
-                $action = mkdir($folder, self::$mask, true);
-
-                if ( $action === false ) throw new Exception("Error creating folder ".$folder);
-
-            }
-
-        }
-
-        else {
-
-            if ( in_array($folders, self::$reserved_folders) ) throw new Exception("Cannot overwrite reserved folder!");
-
-            echo "+ Creating folder ".$folders."\n";
-
-            $action = mkdir($folders, self::$mask, true);
-
-            if ( $action === false ) throw new Exception("Error creating folder ".$folders);
-
-        }
-
-        echo "+ PLEASE REMEMBER to chmod and/or chown created folders according to your needs.\n";
-
-    }
-
-    private static function delete_folders($folders) {
-        
-        if ( is_array($folders) ) {
-
-            foreach ($folders as $folder) {
-                
-                if ( in_array($folder, self::$reserved_folders) ) throw new Exception("Cannot delete reserved folder!");
-
-                echo "- deleting folder ".$folder."\n";
-
-                try {
-
-                    self::recursive_unlink($folder);
-                    
-                } catch (Exception $e) {
-                    
-                    throw $e;
-
-                }
-
-            }
-
-        }
-
-        else {
-
-            if ( in_array($folders, self::$reserved_folders) ) throw new Exception("Cannot overwrite reserved folder!");
-
-            echo "- deleting folder ".$folders."\n";
-
-            try {
-
-                self::recursive_unlink($folders);
-                
-            } catch (Exception $e) {
-                
-                throw $e;
-
-            }
-
-        }
-
-    }
-
-    private static function recursive_unlink($folder) {
-
-        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-            
-            $pathname = $path->getPathname();
-
-            if ( $path->isDir() ) {
-
-                $action = rmdir($pathname);
-
-            } 
-            else {
-
-                $action = unlink($pathname);
-
-            }
-
-            if ( $action === false ) throw new Exception("Error deleting ".$pathname." during recursive unlink of folder ".$folder);
-
-        }
-
-        $action = rmdir($folder);
-
-        if ( $action === false ) throw new Exception("Error deleting folder ".$folder);
-
-    }
-
     private static function ascii() {
 
-        $ascii = "\n   ______                                 __              __        \r\n";
-        $ascii .= "  / ____/  ____    ____ ___   ____   ____/ /  ____       / /  ____ \r\n";
-        $ascii .= " / /      / __ \  / __ `__ \ / __ \ / __  /  / __ \     / /  / __ \ \r\n";
-        $ascii .= "/ /___   / /_/ / / / / / / // /_/ // /_/ /  / /_/ /    / /  / /_/ /\r\n";
-        $ascii .= "\____/   \____/ /_/ /_/ /_/ \____/ \__,_/   \____/  __/ /   \____/ \r\n";
-        $ascii .= "-------------------------------------------------  /___/  ---------\r\n";
-        $ascii .= "                 __                      __                        \r\n";
-        $ascii .= "  ___    _  __  / /_  ___    ____   ____/ /  ___    _____          \r\n";
-        $ascii .= " / _ \  | |/_/ / __/ / _ \  / __ \ / __  /  / _ \  / ___/          \r\n";
-        $ascii .= "/  __/ _>  <  / /_  /  __/ / / / // /_/ /  /  __/ / /              \r\n";
-        $ascii .= "\___/ /_/|_|  \__/  \___/ /_/ /_/ \__,_/   \___/ /_/               \r\n";
-        $ascii .= "--------------------------------------------------------           \r\n\n";
-        
-        echo $ascii;
+        echo file_get_contents("ExtenderInstaller/logo.ascii")."\n";
 
     }
 
