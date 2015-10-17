@@ -139,13 +139,13 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
         try {
 
-            if ( $type == "extender-plugins-bundle" ) ExtenderInstaller::loadPlugin($name, $plugins_actions);
+            if ( !empty($plugins_actions) ) ExtenderInstaller::loadPlugin($name, $plugins_actions);
 
-            if ( $type == "extender-tasks-bundle" ) ExtenderInstaller::loadTasks($name, $tasks_actions);
+            if ( !empty($tasks_actions) ) ExtenderInstaller::loadTasks($name, $tasks_actions);
 
-            if ( $type == "extender-commands-bundle" ) ExtenderInstaller::loadCommands($name, $commands_actions);
+            if ( !empty($commands_actions) ) ExtenderInstaller::loadCommands($name, $commands_actions);
 
-            FileInstaller::create_folders($folders_actions);
+            if ( !empty($folders_actions) ) FileInstaller::create_folders($folders_actions);
 
         } catch (Exception $e) {
             
@@ -156,18 +156,24 @@ class ExtenderInstallerActions extends AbstractInstaller {
     }
 
     private static function packageUninstall($type, $name, $extra) {
+
+        $plugins_actions = isset($extra["comodojo-plugins-load"]) ? $extra["comodojo-plugins-load"] : Array();
+
+        $commands_actions = isset($extra["comodojo-commands-register"]) ? $extra["comodojo-commands-register"] : Array();
+
+        $tasks_actions = isset($extra["comodojo-tasks-register"]) ? $extra["comodojo-tasks-register"] : Array();
         
         $folders_actions = isset($extra["comodojo-folders-create"]) ? $extra["comodojo-folders-create"] : Array();
 
         try {
-            
-            if ( $type == "extender-plugins-bundle" ) ExtenderInstaller::unloadPlugin($name);
 
-            if ( $type == "extender-tasks-bundle" ) ExtenderInstaller::unloadTasks($name);
+            if ( !empty($plugins_actions) ) ExtenderInstaller::unloadPlugin($name);
 
-            if ( $type == "extender-commands-bundle" ) ExtenderInstaller::unloadCommands($name);
+            if ( !empty($tasks_actions) ) ExtenderInstaller::unloadTasks($name);
 
-            FileInstaller::delete_folders($folders_actions);
+            if ( !empty($commands_actions) ) ExtenderInstaller::unloadCommands($name);
+
+            if ( !empty($folders_actions) ) FileInstaller::delete_folders($folders_actions);
 
         } catch (Exception $e) {
             
