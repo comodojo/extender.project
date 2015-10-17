@@ -3,12 +3,7 @@
 use Comodojo\ExtenderInstaller\AbstractInstaller;
 
 /**
- * Extender installer - a simple class (static methods) to manage plugin/bundles installations
- *
- * It currently supports:
- * - extender-plugin - generic plugins
- * - extender-tasks-bundle - tasks bundles
- * - extender-commands-bundle - commands bundles
+ * Extender installer
  * 
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -32,7 +27,7 @@ use Comodojo\ExtenderInstaller\AbstractInstaller;
 
 class FileInstaller extends AbstractInstaller {
 
-	public static function create_folders($folders) {
+	public static function createFolders($folders) {
 
         if ( is_array($folders) ) {
 
@@ -66,7 +61,7 @@ class FileInstaller extends AbstractInstaller {
 
     }
 
-    public static function delete_folders($folders) {
+    public static function deleteFolders($folders) {
         
         if ( is_array($folders) ) {
 
@@ -78,7 +73,7 @@ class FileInstaller extends AbstractInstaller {
 
                 try {
 
-                    self::recursive_unlink($folder);
+                    self::recursiveUnlink($folder);
                     
                 } catch (Exception $e) {
                     
@@ -98,7 +93,7 @@ class FileInstaller extends AbstractInstaller {
 
             try {
 
-                self::recursive_unlink($folders);
+                self::recursiveUnlink($folders);
                 
             } catch (Exception $e) {
                 
@@ -110,7 +105,7 @@ class FileInstaller extends AbstractInstaller {
 
     }
 
-    public static function recursive_unlink($folder) {
+    public static function recursiveUnlink($folder) {
 
         foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
             

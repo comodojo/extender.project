@@ -1,12 +1,7 @@
 <?php namespace Comodojo\ExtenderInstaller;
 
 /**
- * Extender installer - a simple class (static methods) to manage plugin/bundles installations
- *
- * It currently supports:
- * - extender-plugin - generic plugins
- * - extender-tasks-bundle - tasks bundles
- * - extender-commands-bundle - commands bundles
+ * Extender installer
  * 
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -32,7 +27,7 @@ abstract class AbstractInstaller {
 
 	protected static $known_types = array('extender-plugins-bundle', 'extender-tasks-bundle', 'extender-commands-bundle', 'comodojo-bundle');
 
-    protected static $reserved_folders = Array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
+    protected static $reserved_folders = array('ExtenderInstaller','configs','commands','plugins','database','logs','tasks','vendor');
 
     protected static $vendor = 'vendor/';
 

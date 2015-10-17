@@ -1,12 +1,14 @@
 <?php namespace Comodojo\ExtenderInstaller;
 
+use \Comodojo\ExtenderInstaller\AbstractInstaller;
+use \Comodojo\ExtenderInstaller\ExtenderInstaller;
+use \Comodojo\ExtenderInstaller\FileInstaller;
+use \Composer\Script\Event;
+use \Composer\Installer\PackageEvent;
+use \Exception;
+
 /**
- * Extender installer - a simple class (static methods) to manage plugin/bundles installations
- *
- * It currently supports:
- * - extender-plugin - generic plugins
- * - extender-tasks-bundle - tasks bundles
- * - extender-commands-bundle - commands bundles
+ * Extender installer
  * 
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -27,13 +29,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-use \Comodojo\ExtenderInstaller\AbstractInstaller;
-use \Comodojo\ExtenderInstaller\ExtenderInstaller;
-use \Comodojo\ExtenderInstaller\FileInstaller;
-use \Composer\Script\Event;
-use \Composer\Installer\PackageEvent;
-use \Exception;
 
 class ExtenderInstallerActions extends AbstractInstaller {
 
@@ -129,13 +124,13 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     private static function packageInstall($type, $name, $extra) {
 
-        $plugins_actions = isset($extra["comodojo-plugins-load"]) ? $extra["comodojo-plugins-load"] : Array();
+        $plugins_actions = self::parsePluginExtra($extra);
 
-        $commands_actions = isset($extra["comodojo-commands-register"]) ? $extra["comodojo-commands-register"] : Array();
+        $commands_actions = self::parseCommandExtra($extra);
 
-        $tasks_actions = isset($extra["comodojo-tasks-register"]) ? $extra["comodojo-tasks-register"] : Array();
+        $tasks_actions = self::parseTaskExtra($extra);
 
-        $folders_actions = isset($extra["comodojo-folders-create"]) ? $extra["comodojo-folders-create"] : Array();
+        $folders_actions = self::parseFolderExtra($extra);
 
         try {
 
@@ -145,7 +140,7 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
             if ( !empty($commands_actions) ) ExtenderInstaller::loadCommands($name, $commands_actions);
 
-            if ( !empty($folders_actions) ) FileInstaller::create_folders($folders_actions);
+            if ( !empty($folders_actions) ) FileInstaller::createFolders($folders_actions);
 
         } catch (Exception $e) {
             
@@ -157,13 +152,13 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     private static function packageUninstall($type, $name, $extra) {
 
-        $plugins_actions = isset($extra["comodojo-plugins-load"]) ? $extra["comodojo-plugins-load"] : Array();
+        $plugins_actions = self::parsePluginExtra($extra);
 
-        $commands_actions = isset($extra["comodojo-commands-register"]) ? $extra["comodojo-commands-register"] : Array();
+        $commands_actions = self::parseCommandExtra($extra);
 
-        $tasks_actions = isset($extra["comodojo-tasks-register"]) ? $extra["comodojo-tasks-register"] : Array();
-        
-        $folders_actions = isset($extra["comodojo-folders-create"]) ? $extra["comodojo-folders-create"] : Array();
+        $tasks_actions = self::parseTaskExtra($extra);
+
+        $folders_actions = self::parseFolderExtra($extra);
 
         try {
 
@@ -173,13 +168,93 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
             if ( !empty($commands_actions) ) ExtenderInstaller::unloadCommands($name);
 
-            if ( !empty($folders_actions) ) FileInstaller::delete_folders($folders_actions);
+            if ( !empty($folders_actions) ) FileInstaller::deleteFolders($folders_actions);
 
         } catch (Exception $e) {
             
             throw $e;
             
         }
+
+    }
+
+    private static function parsePluginExtra($extra) {
+
+        if ( isset($extra["comodojo-plugins-load"]) ) {
+
+            $return = $extra["comodojo-plugins-load"];
+
+        } else if ( isset($extra["extender-plugin-load"]) ) {
+
+            $return = $extra["extender-plugin-load"];
+
+        } else {
+
+            $return = array();
+
+        }
+
+        return $return;
+
+    }
+
+    private static function parseCommandExtra($extra) {
+
+        if ( isset($extra["comodojo-commands-register"]) ) {
+
+            $return = $extra["comodojo-commands-register"];
+
+        } else if ( isset($extra["extender-command-register"]) ) {
+
+            $return = $extra["extender-command-register"];
+
+        } else {
+
+            $return = array();
+
+        }
+
+        return $return;
+
+    }
+
+    private static function parseTaskExtra($extra) {
+
+        if ( isset($extra["comodojo-tasks-register"]) ) {
+
+            $return = $extra["comodojo-tasks-register"];
+
+        } else if ( isset($extra["extender-task-register"]) ) {
+
+            $return = $extra["extender-task-register"];
+
+        } else {
+
+            $return = array();
+
+        }
+
+        return $return;
+
+    }
+
+    private static function parseFolderExtra($extra) {
+
+        if ( isset($extra["comodojo-folders-create"]) ) {
+
+            $return = $extra["comodojo-folders-create"];
+
+        } else if ( isset($extra["folder-create"]) ) {
+
+            $return = $extra["folder-create"];
+
+        } else {
+
+            $return = array();
+
+        }
+
+        return $return;
 
     }
 

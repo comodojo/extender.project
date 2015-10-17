@@ -3,12 +3,7 @@
 use Comodojo\ExtenderInstaller\AbstractInstaller;
 
 /**
- * Extender installer - a simple class (static methods) to manage plugin/bundles installations
- *
- * It currently supports:
- * - extender-plugin - generic plugins
- * - extender-tasks-bundle - tasks bundles
- * - extender-commands-bundle - commands bundles
+ * Extender installer
  * 
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
