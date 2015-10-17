@@ -31,9 +31,3 @@ To perform a Pull Requests on [Github](https://github.com/comodojo/extender.proj
 - **Document any change in behaviour**.
 
 Please remember: one pull request per feature; If you want to do more than one thing, send multiple pull requests.
-
-## Running Tests
-
-``` bash
-$ phpunit
-```
