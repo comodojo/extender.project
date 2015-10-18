@@ -124,11 +124,11 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     private static function packageInstall($type, $name, $extra) {
 
-        $plugins_actions = self::parsePluginExtra($extra);
+        $plugins_actions = self::parseExtenderPluginExtra($extra);
 
-        $commands_actions = self::parseCommandExtra($extra);
+        $commands_actions = self::parseExtenderCommandExtra($extra);
 
-        $tasks_actions = self::parseTaskExtra($extra);
+        $tasks_actions = self::parseExtenderTaskExtra($extra);
 
         $folders_actions = self::parseFolderExtra($extra);
 
@@ -152,11 +152,11 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     private static function packageUninstall($type, $name, $extra) {
 
-        $plugins_actions = self::parsePluginExtra($extra);
+        $plugins_actions = self::parseExtenderPluginExtra($extra);
 
-        $commands_actions = self::parseCommandExtra($extra);
+        $commands_actions = self::parseExtenderCommandExtra($extra);
 
-        $tasks_actions = self::parseTaskExtra($extra);
+        $tasks_actions = self::parseExtenderTaskExtra($extra);
 
         $folders_actions = self::parseFolderExtra($extra);
 
@@ -178,7 +178,7 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     }
 
-    private static function parsePluginExtra($extra) {
+    private static function parseExtenderPluginExtra($extra) {
 
         if ( isset($extra["comodojo-plugins-load"]) ) {
 
@@ -198,7 +198,7 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     }
 
-    private static function parseCommandExtra($extra) {
+    private static function parseExtenderCommandExtra($extra) {
 
         if ( isset($extra["comodojo-commands-register"]) ) {
 
@@ -218,7 +218,7 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     }
 
-    private static function parseTaskExtra($extra) {
+    private static function parseExtenderTaskExtra($extra) {
 
         if ( isset($extra["comodojo-tasks-register"]) ) {
 
