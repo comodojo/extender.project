@@ -1,6 +1,9 @@
 <?php namespace Comodojo\ExtenderInstaller;
 
-use Comodojo\ExtenderInstaller\AbstractInstaller;
+require("vendor/mustangostang/spyc/Spyc.php");
+
+use \Comodojo\ExtenderInstaller\AbstractInstaller;
+use \Spyc;
 
 /**
  * Extender installer
@@ -29,264 +32,215 @@ class ExtenderInstaller extends AbstractInstaller {
 
 	public static function loadPlugin($package_name, $package_loader) {
 
-        $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
+        $events = Spyc::YAMLLoad(self::$extender_plugins_cfg);
 
-        if ( is_array($package_loader) ) {
+        foreach ($package_loader as $loader) {
 
-            $line_load = "";
-
-            foreach ($package_loader as $loader) {
-
-                if ( !isset($loader['method']) OR empty($loader["method"]) ) {
-
-                    echo "+ Enabling plugin ".$loader["class"]." on event ".$loader["event"]."\n";
-
-                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'");'."\n";
-
-                } else {
-
-                    echo "+ Enabling plugin ".$loader["class"]."::".$loader["method"]." on event ".$loader["event"]."\n";
-
-                    $line_load .= '$extender->addHook("'.$loader["event"].'", "'.$loader["class"].'", "'.$loader["method"].'");'."\n";
-
-                }
-
-            }
+            $events = self::addPlugin($events, $package_name, $loader);
 
         }
-        else {
 
-            if ( !isset($package_loader['method']) OR empty($package_loader["method"]) ) {
+        $action = file_put_contents(self::$extender_plugins_cfg, Spyc::YAMLDump($events));
 
-                echo "+ Enabling plugin ".$package_loader["class"]." on event ".$package_loader["event"]."\n";
-
-                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'");'."\n";
-
-            } else {
-
-                echo "+ Enabling plugin ".$package_loader["class"]."::".$package_loader["method"]." on event ".$package_loader["event"]."\n";
-
-                $line_load = '$extender->addHook("'.$package_loader["event"].'", "'.$package_loader["class"].'", "'.$package_loader["method"].'");'."\n";
-
-            }
-
-        }
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
-
-        $action = file_put_contents(self::$extender_plugins_cfg, $to_append, FILE_APPEND | LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot activate plugin");
+        if ( $action === false ) throw new Exception("Cannot activate plugin' package: ".$package_name);
 
     }
 
     public static function unloadPlugin($package_name) {
 
-        echo "- Disabling plugin ".$package_name."\n";
+        $events = Spyc::YAMLLoad(self::$extender_plugins_cfg);
 
-        $line_mark = "/****** PLUGIN - ".$package_name." - PLUGIN ******/";
+        $events = self::deletePackage("plugin", $events, $package_name);
 
-        $cfg = file(self::$extender_plugins_cfg, FILE_IGNORE_NEW_LINES);
+        $action = file_put_contents(self::$extender_plugins_cfg, Spyc::YAMLDump($events));
 
-        $found = false;
-
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
-
-                unset($cfg[$position]);
-
-                $found = !$found;
-
-            }
-
-            else {
-
-                if ( $found ) unset($cfg[$position]);
-                else continue;
-
-            }
-
-        }
-
-        $action = file_put_contents(self::$extender_plugins_cfg, implode("\n", array_values($cfg)), LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot deactivate plugin");
+        if ( $action === false ) throw new Exception("Cannot deactivate plugins' package: ".$package_name);
 
     }
 
     public static function loadTasks($package_name, $package_loader) {
 
-        $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
+        $tasks = Spyc::YAMLLoad(self::$extender_tasks_cfg);
 
-        if ( is_array($package_loader) ) {
+        foreach ($package_loader as $loader) {
 
-            $line_load = "";
-
-            foreach ($package_loader as $loader) {
-
-                $name = $loader['name'];
-
-                $class = $loader['class'];
-
-                $description = isset($loader['description']) ? $loader['description'] : null;
-
-                echo "+ Enabling task ".$name."\n";
-
-                $line_load .= '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
-
-            }
+            $tasks = self::addTask($tasks, $package_name, $loader);
 
         }
-        else {
 
-            $name = $package_loader['name'];
+        $action = file_put_contents(self::$extender_tasks_cfg, Spyc::YAMLDump($tasks));
 
-            $class = $package_loader['class'];
-
-            $description = isset($package_loader['description']) ? $package_loader['description'] : null;
-
-            echo "+ Enabling task ".$name."\n";
-
-            $line_load = '$extender->addTask("'.$name.'", "'.$class.'", "'.$description.'");'."\n";
-
-        }
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
-
-        $action = file_put_contents(self::$extender_tasks_cfg, $to_append, FILE_APPEND | LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot activate tasks");
+        if ( $action === false ) throw new Exception("Cannot activate tasks' package: ".$package_name);
 
     }
 
     public static function unloadTasks($package_name) {
 
-        echo "- Disabling tasks of ".$package_name."\n";
+        $tasks = Spyc::YAMLLoad(self::$extender_tasks_cfg);
 
-        $line_mark = "/****** TASKS - ".$package_name." - TASKS ******/";
+        $tasks = self::deletePackage("task", $tasks, $package_name);
 
-        $cfg = file(self::$extender_tasks_cfg, FILE_IGNORE_NEW_LINES);
+        $action = file_put_contents(self::$extender_tasks_cfg, Spyc::YAMLDump($tasks));
 
-        $found = false;
-
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
-
-                unset($cfg[$position]);
-
-                $found = !$found;
-
-            }
-
-            else {
-
-                if ( $found ) unset($cfg[$position]);
-                else continue;
-
-            }
-
-        }
-
-        $action = file_put_contents(self::$extender_tasks_cfg, implode("\n", array_values($cfg)), LOCK_EX);
-
-        if ( $action === false ) throw new Exception("Cannot deactivate tasks");
+        if ( $action === false ) throw new Exception("Cannot deactivate tasks' package: ".$package_name);
 
     }
 
     public static function loadCommands($package_name, $package_loader) {
 
-        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
+        $commands = Spyc::YAMLLoad(self::$extender_commands_cfg);
 
-        $line_load = "";
+        foreach ($package_loader as $command => $actions) {
 
-        if ( is_array($package_loader) ) {
-
-            foreach ($package_loader as $command => $actions) {
-
-                $description = isset($actions["description"]) ? $actions["description"] : "";
-
-                $aliases = array();
-
-                if ( isset($actions["aliases"]) AND @is_array($actions["aliases"]) ) {
-
-                    foreach ($actions["aliases"] as $alias) array_push($aliases, $alias);
-
-                }
-
-                $options = array();
-
-                if ( isset($actions["options"]) AND @is_array($actions["options"]) ) {
-
-                    foreach ($actions["options"] as $option => $oparameters) $options[$option] = $oparameters;
-
-                }
-
-                $arguments = array();
-
-                if ( isset($actions["arguments"]) AND @is_array($actions["arguments"]) ) {
-
-                    foreach ($actions["arguments"] as $argument => $aparameters) $arguments[$argument] = $aparameters;
-
-                }
-
-                $parameters = array(
-                    "description" => $description, 
-                    "aliases"     => $aliases,
-                    "options"     => $options,
-                    "arguments"   => $arguments
-                );
-                
-                echo "+ Enabling command ".$command." (".$package_name.")\n";
-
-                $line_load .= '$extender->addCommand("' . $command . '", ' . var_export($parameters, true) . ');'."\n";
-
-            }
+            $commands = self::addCommand($commands, $package_name, $command, $actions);
 
         }
-        else throw new Exception("Wrong service loader");
-        
-        $to_append = "\n".$line_mark."\n".$line_load.$line_mark."\n";
 
-        $action = file_put_contents(self::$extender_commands_cfg, $to_append, FILE_APPEND | LOCK_EX);
+        $action = file_put_contents(self::$extender_commands_cfg, Spyc::YAMLDump($commands));
 
-        if ( $action === false ) throw new Exception("Cannot activate commands bundle");
+        if ( $action === false ) throw new Exception("Cannot activate commands' package: ".$package_name);
 
     }
 
     public static function unloadCommands($package_name) {
 
-        echo "- Disabling commands of ".$package_name."\n";
+        $commands = Spyc::YAMLLoad(self::$extender_commands_cfg);
 
-        $line_mark = "/****** COMMANDS - ".$package_name." - COMMANDS ******/";
+        $commands = self::deletePackage("command", $commands, $package_name);
 
-        $cfg = file(self::$extender_commands_cfg, FILE_IGNORE_NEW_LINES);
+        $action = file_put_contents(self::$extender_commands_cfg, Spyc::YAMLDump($commands));
 
-        $found = false;
+        if ( $action === false ) throw new Exception("Cannot deactivate commands' package: ".$package_name);
 
-        foreach ($cfg as $position => $line) {
-            
-            if ( stristr($line, $line_mark) ) {
+    }
 
-                unset($cfg[$position]);
+    private static function addPlugin($events, $package, $plugin) {
 
-                $found = !$found;
+        if ( empty($plugin["class"]) || empty($plugin["event"]) ) {
 
-            }
+            echo "! Skipping invalid plugin: ".implode(":",$plugin)."\n";
 
-            else {
+        } else if ( empty($plugin["method"]) ) {
 
-                if ( $found ) unset($cfg[$position]);
-                else continue;
+            $events[] = array(
+                "package" => $package,
+                "data" => array(
+                    "class" => $plugin["class"],
+                    "event" => $plugin["event"]
+                )
+            );
 
-            }
+            echo "+ Enabling plugin ".$plugin["class"]." on event ".$plugin["event"]."\n";
+
+        } else {
+
+            $events[] = array(
+                "package" => $package,
+                "data" => array(
+                    "class" => $plugin["class"],
+                    "method" => $plugin["method"],
+                    "event" => $plugin["event"]
+                )
+            );
+
+            echo "+ Enabling plugin ".$plugin["class"]."::".$plugin["method"]." on event ".$plugin["event"]."\n";
 
         }
 
-        $action = file_put_contents(self::$extender_commands_cfg, implode("\n", array_values($cfg)), LOCK_EX);
+        return $events;
 
-        if ( $action === false ) throw new Exception("Cannot deactivate commands bundle");
+    }
+
+    private static function addTask($tasks, $package, $task) {
+
+        if ( empty($task["name"]) || empty($task["class"]) ) {
+
+            echo "! Skipping invalid task: ".implode(":",$task)."\n";
+
+        } else if ( array_key_exists($task["name"], $tasks) ) {
+
+            echo "! Skipping duplicate task: ".$task["name"]."\n";
+
+        } else {
+
+            $tasks[$task["name"]] = array(
+                "package" => $package,
+                "data" => array(
+                    "class" => $task["class"],
+                    "description" => empty($task["description"]) ? null : $task["description"]
+                )
+            );
+
+            echo "+ Enabling task ".$task["name"]."\n";
+
+        }
+
+        return $tasks;
+
+    }
+
+    private static function addCommand($commands, $package, $command, $actions) {
+
+        if ( empty($actions["class"]) ) {
+
+            echo "! Skipping invalid command: ".$command."\n";
+
+        } else {
+
+            $description = empty($actions["description"]) ? "" : $actions["description"];
+
+            $aliases = array();
+
+            if ( isset($actions["aliases"]) && @is_array($actions["aliases"]) ) {
+
+                foreach ($actions["aliases"] as $alias) array_push($aliases, $alias);
+
+            }
+
+            $options = array();
+
+            if ( isset($actions["options"]) && @is_array($actions["options"]) ) {
+
+                foreach ($actions["options"] as $option => $oparameters) $options[$option] = $oparameters;
+
+            }
+
+            $arguments = array();
+
+            if ( isset($actions["arguments"]) && @is_array($actions["arguments"]) ) {
+
+                foreach ($actions["arguments"] as $argument => $aparameters) $arguments[$argument] = $aparameters;
+
+            }
+
+            $parameters = array(
+                "package" => $package,
+                "data" => array(
+                    "class"       => $actions["class"],
+                    "description" => $description, 
+                    "aliases"     => $aliases,
+                    "options"     => $options,
+                    "arguments"   => $arguments
+                )
+            );
+            
+            $commands[$command] = $parameters;
+
+            echo "+ Enabling command ".$command." (from ".$package.")\n";
+
+        }
+
+        return $commands;
+
+    }
+
+    private static function deletePackage($type, $haystack, $package) {
+
+        $registered = array_keys(array_column($haystack, 'package'), $package);
+
+        foreach ($registered as $needle) unset($haystack[$needle]);
+
+        echo "- ".count($registered)." ".$type."(s) from ".$package." deleted\n";
 
     }
 

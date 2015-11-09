@@ -31,11 +31,11 @@ abstract class AbstractInstaller {
 
     protected static $vendor = 'vendor/';
 
-    protected static $extender_plugins_cfg = 'configs/extender-plugins-config.php';
+    protected static $extender_plugins_cfg = 'configs/extender-plugins.yaml';
 
-    protected static $extender_commands_cfg = 'configs/extender-commands-config.php';
+    protected static $extender_commands_cfg = 'configs/extender-commands.yaml';
 
-    protected static $extender_tasks_cfg = 'configs/extender-tasks-config.php';
+    protected static $extender_tasks_cfg = 'configs/extender-tasks.yaml';
 
     protected static $mask = 0644;
 

@@ -46,6 +46,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.9",
+        "mustangostang/spyc": "0.5.*",
         "comodojo/extender.framework": "1.0.*",
         "comodojo/extender.commandsbundle.default": "1.0.*"
     }

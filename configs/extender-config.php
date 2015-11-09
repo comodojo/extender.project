@@ -23,7 +23,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-######## BEGIN EXTENDER INTERNAL PROPERTIES ########
+######## BEGIN GENERAL PROPERTIES ########
 
 /**
  * Local timezone, to not rely on the system's timezone settings
@@ -40,7 +40,32 @@ define("EXTENDER_TIMEZONE", "Europe/Rome");
  *
  * @static  string
  */
-define("EXTENDER_REAL_PATH", realpath(dirname(__FILE__))."/../");
+define("EXTENDER_REAL_PATH", realpath(dirname(__FILE__)."/../"))."/";
+
+/**
+ * Tasks config file
+ *
+ * @static  string
+ */
+define("EXTENDER_TASKS_CONFIG", EXTENDER_REAL_PATH."config/extender-tasks.yaml");
+
+/**
+ * Commands config file
+ *
+ * @static  string
+ */
+define("EXTENDER_COMMANDS_CONFIG", EXTENDER_REAL_PATH."config/extender-commands.yaml");
+
+/**
+ * Plugins config file
+ *
+ * @static  string
+ */
+define("EXTENDER_PLUGINS_CONFIG", EXTENDER_REAL_PATH."config/extender-plugins.yaml");
+
+######## END GENERAL PROPERTIES ########
+
+######## BEGIN PERFORMANCE PROPERTIES ########
 
 /**
  * Enable/disable multithread mode; this feaure REQUIRE PHP Process
@@ -99,10 +124,9 @@ define("EXTENDER_MAX_CHILDS_RUNTIME", 600);
  */
 // define("EXTENDER_CHILD_NICENESS", 0);
 
-######## END EXTENDER INTERNAL PROPERTIES ########
+######## END PERFORMANCE PROPERTIES ########
 
-
-######## BEGIN EXTENDER LOG PROPERTIES ########
+######## BEGIN LOG PROPERTIES ########
 
 /**
  * Enable/disable logger
@@ -137,10 +161,10 @@ define("EXTENDER_LOG_TARGET", "extender.log");
  */
 define("EXTENDER_LOG_LEVEL", "ERROR");
 
-######## END EXTENDER LOG PROPERTIES ########
+######## END LOG PROPERTIES ########
 
 
-######## BEGIN DISPATCHER FOLDERS ########
+######## BEGIN FOLDERS ########
 
 /**
  * Logs folder
@@ -184,10 +208,9 @@ define("EXTENDER_COMMAND_FOLDER", EXTENDER_REAL_PATH."commands/");
  */
 define("EXTENDER_CACHE_FOLDER", EXTENDER_REAL_PATH."cache/");
 
-######### END DISPATCHER FOLDERS #########
+######## END FOLDERS ########
 
-
-######## BEGIN EXTENDER DATABASE PROPERTIES ########
+######## BEGIN DATABASE PROPERTIES ########
 
 /**
  * Database model
@@ -259,4 +282,4 @@ define("EXTENDER_DATABASE_TABLE_JOBS", "jobs");
  */
 define("EXTENDER_DATABASE_TABLE_WORKLOGS", "worklogs");
 
-######### END EXTENDER DATABASE PROPERTIES #########
+######## END DATABASE PROPERTIES ########
