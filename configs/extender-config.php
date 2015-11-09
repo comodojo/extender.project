@@ -40,28 +40,28 @@ define("EXTENDER_TIMEZONE", "Europe/Rome");
  *
  * @static  string
  */
-define("EXTENDER_REAL_PATH", realpath(dirname(__FILE__)."/../"))."/";
+define("EXTENDER_REAL_PATH", realpath(dirname(__FILE__)."/../")."/");
 
 /**
  * Tasks config file
  *
  * @static  string
  */
-define("EXTENDER_TASKS_CONFIG", EXTENDER_REAL_PATH."config/extender-tasks.yaml");
+define("EXTENDER_TASKS_CONFIG", EXTENDER_REAL_PATH."configs/extender-tasks.yaml");
 
 /**
  * Commands config file
  *
  * @static  string
  */
-define("EXTENDER_COMMANDS_CONFIG", EXTENDER_REAL_PATH."config/extender-commands.yaml");
+define("EXTENDER_COMMANDS_CONFIG", EXTENDER_REAL_PATH."configs/extender-commands.yaml");
 
 /**
  * Plugins config file
  *
  * @static  string
  */
-define("EXTENDER_PLUGINS_CONFIG", EXTENDER_REAL_PATH."config/extender-plugins.yaml");
+define("EXTENDER_PLUGINS_CONFIG", EXTENDER_REAL_PATH."configs/extender-plugins.yaml");
 
 ######## END GENERAL PROPERTIES ########
 
