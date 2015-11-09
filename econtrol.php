@@ -50,7 +50,7 @@ require "configs/extender-config.php";
  | will be handled directly with composer.
  |
  */
-require 'vendor/autoload.php';
+require EXTENDER_REAL_PATH.'vendor/autoload.php';
 
 /*
  |--------------------------------
