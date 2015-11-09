@@ -124,6 +124,8 @@ class ExtenderInstallerActions extends AbstractInstaller {
 
     private static function packageInstall($type, $name, $extra) {
 
+        require_once "vendor/mustangostang/spyc/Spyc.php";
+
         $plugins_actions = self::parseExtenderPluginExtra($extra);
 
         $commands_actions = self::parseExtenderCommandExtra($extra);
@@ -151,6 +153,8 @@ class ExtenderInstallerActions extends AbstractInstaller {
     }
 
     private static function packageUninstall($type, $name, $extra) {
+
+        require_once "vendor/mustangostang/spyc/Spyc.php";
 
         $plugins_actions = self::parseExtenderPluginExtra($extra);
 

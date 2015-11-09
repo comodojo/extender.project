@@ -1,7 +1,5 @@
 <?php namespace Comodojo\ExtenderInstaller;
 
-require("vendor/mustangostang/spyc/Spyc.php");
-
 use \Comodojo\ExtenderInstaller\AbstractInstaller;
 use \Spyc;
 
