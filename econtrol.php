@@ -65,26 +65,6 @@ $extender = new Econtrol();
 
 /*
  |--------------------------------
- | Load tasks
- |--------------------------------
- |
- | Load installed/declared tasks
- |
- */
-require 'configs/extender-tasks-config.php';
-
-/*
- |--------------------------------
- | Load commands
- |--------------------------------
- |
- | Load installed/declared commands
- |
- */
-require 'configs/extender-commands-config.php';
-
-/*
- |--------------------------------
  | Process command
  |--------------------------------
  |

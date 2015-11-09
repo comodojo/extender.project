@@ -1,5 +1,4 @@
 #!/usr/bin/env php
-
 <?php
 
 use Comodojo\Extender\Extender;
@@ -62,26 +61,6 @@ require 'vendor/autoload.php';
  |
  */
 $extender = new Extender();
-
-/*
- |--------------------------------
- | Load tasks
- |--------------------------------
- |
- | Load installed/declared tasks
- |
- */
-require 'configs/extender-tasks-config.php';
-
-/*
- |--------------------------------
- | Load plugins
- |--------------------------------
- |
- | Load declared plugins (hooks)
- |
- */
-require 'configs/extender-plugins-config.php';
 
 /*
  |--------------------------------
