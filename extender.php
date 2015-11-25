@@ -9,13 +9,13 @@ use Comodojo\Extender\Extender;
  * Database driven, multiprocess, pseudo-cron tasks executor
  *
  * This is the frontend (real extender)
- * 
+ *
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     GPL-3.0+
  *
  * LICENSE:
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -67,18 +67,7 @@ $extender = new Extender();
  | Extend!
  |--------------------------------
  |
- | If in daemon mode, start while
- | loop
+ | Invoke the 'extend' method
  |
  */
-if ( $extender->getDaemonMode() ) {
-
-    while (true) {
-        
-        $extender->extend();
-
-        sleep(EXTENDER_IDLE_TIME);
-
-    }
-
-} else $extender->extend();
+$extender->extend();
