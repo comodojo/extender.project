@@ -8,7 +8,7 @@
  * @license     GPL-3.0+
  *
  * LICENSE:
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -168,42 +168,21 @@ define("EXTENDER_LOG_LEVEL", "ERROR");
 
 /**
  * Logs folder
- * 
+ *
  * @static  string
  */
 define("EXTENDER_LOG_FOLDER", EXTENDER_REAL_PATH."logs/");
 
 /**
  * Database folder (if sqlite3)
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_FOLDER", EXTENDER_REAL_PATH."database/");
 
 /**
- * Tasks folder
- * 
- * @static  string
- */
-define("EXTENDER_TASK_FOLDER", EXTENDER_REAL_PATH."tasks/");
-
-/**
- * Plugins folder
- * 
- * @static  string
- */
-define("EXTENDER_PLUGIN_FOLDER", EXTENDER_REAL_PATH."plugins/");
-
-/**
- * Commands folder
- * 
- * @static  string
- */
-define("EXTENDER_COMMAND_FOLDER", EXTENDER_REAL_PATH."commands/");
-
-/**
  * Cache folder
- * 
+ *
  * @static  string
  */
 define("EXTENDER_CACHE_FOLDER", EXTENDER_REAL_PATH."cache/");
@@ -219,21 +198,21 @@ define("EXTENDER_CACHE_FOLDER", EXTENDER_REAL_PATH."cache/");
  * with models supported by comodojo/database lib.
  *
  * Safe choices: MYSQLI, MYSQL_PDO or SQLITE_PDO (default)
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_MODEL", "SQLITE_PDO");
 
 /**
  * Database host
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_HOST", "localhost");
 
 /**
  * Database port
- * 
+ *
  * @static  integer
  */
 define("EXTENDER_DATABASE_PORT",1);
@@ -242,42 +221,42 @@ define("EXTENDER_DATABASE_PORT",1);
  * Database name
  *
  * In case of SQLITE_PDO database model, name SHOULD contain full path to db file
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_NAME", EXTENDER_DATABASE_FOLDER."extender.sqlite");
 
 /**
  * Database user
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_USER", "comodojo");
 
 /**
  * Database password
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_PASS", "");
 
 /**
  * Database tables' prefix
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_PREFIX", "extender_");
 
 /**
  * Jobs table name
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_TABLE_JOBS", "jobs");
 
 /**
  * Worklogs table name
- * 
+ *
  * @static  string
  */
 define("EXTENDER_DATABASE_TABLE_WORKLOGS", "worklogs");
