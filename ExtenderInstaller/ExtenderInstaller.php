@@ -5,13 +5,13 @@ use \Spyc;
 
 /**
  * Extender installer
- * 
+ *
  * @package     Comodojo extender
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     GPL-3.0+
  *
  * LICENSE:
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -215,13 +215,13 @@ class ExtenderInstaller extends AbstractInstaller {
                 "package" => $package,
                 "data" => array(
                     "class"       => $actions["class"],
-                    "description" => $description, 
+                    "description" => $description,
                     "aliases"     => $aliases,
                     "options"     => $options,
                     "arguments"   => $arguments
                 )
             );
-            
+
             $commands[$command] = $parameters;
 
             echo "+ Enabling command ".$command." (from ".$package.")\n";
@@ -234,11 +234,19 @@ class ExtenderInstaller extends AbstractInstaller {
 
     private static function deletePackage($type, $haystack, $package) {
 
-        $registered = array_keys(array_column($haystack, 'package'), $package);
+        $to_delete = array();
 
-        foreach ($registered as $needle) unset($haystack[$needle]);
+        foreach ($haystack as $key => $value) {
+            if ( $value['package'] == $package ) $to_delete[] = $key;
+        }
 
-        echo "- ".count($registered)." ".$type."(s) from ".$package." deleted\n";
+        foreach ($to_delete as $needle) {
+            unset($haystack[$needle]);
+        }
+
+        echo "- ".count($to_delete)." ".$type."(s) from ".$package." deleted\n";
+
+        return $haystack;
 
     }
 

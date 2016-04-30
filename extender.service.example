@@ -1,0 +1,12 @@
+[Unit]
+Description=Comodojo extender daemon
+Documentation=https://docs.comodojo.org/projects/extenderframework/en/latest/daemonizing.html
+
+[Service]
+Type=simple
+User=[RUNAS-USER]
+ExecStart=/usr/bin/php [EXTENDER-INSTALLATION-PATH]/extender.php -d
+
+[Install]
+WantedBy=multi-user.target
+Alias=extender.service
